@@ -1,6 +1,7 @@
 import com.typesafe.sbt.SbtGit.GitKeys._
 
 lazy val commonSettings = Seq(
+  isSnapshot := false,
   organization := "net.lullabyte",
   scalacOptions ++= Seq(
     "-Xlint",
@@ -27,7 +28,9 @@ lazy val commonSettings = Seq(
   licenses += "MIT" -> url("http://www.opensource.org/licenses/mit-license.html"),
   homepage := Some(url("http://github.com/lucidd/scala-js-chrome")),
   useGpg := true,
-  useGitDescribe := true
+  useGitDescribe := true,
+  bintrayRepository := "maven",
+  bintrayOrganization := Some("7thsense"),
 )
 
 lazy val commonPlugins = Seq(GitVersioning)
@@ -41,12 +44,12 @@ lazy val bindings = project.in(file("bindings"))
     libraryDependencies ++= Seq(
       "org.scala-js" %%% "scalajs-dom" % "0.9.6"
     ),
-    publishMavenStyle := true,
-    publishTo := {
-      val nexus = "https://oss.sonatype.org/"
-      if (isSnapshot.value) Some("snapshots" at nexus + "content/repositories/snapshots")
-      else Some("releases"  at nexus + "service/local/staging/deploy/maven2")
-    },
+//    publishMavenStyle := true,
+//    publishTo := {
+//      val nexus = "https://oss.sonatype.org/"
+//      if (isSnapshot.value) Some("snapshots" at nexus + "content/repositories/snapshots")
+//      else Some("releases"  at nexus + "service/local/staging/deploy/maven2")
+//    },
     scalacOptions += "-P:scalajs:sjsDefinedByDefault",
     scalaJSUseMainModuleInitializer := true
   ).
@@ -68,8 +71,8 @@ lazy val plugin = project.in(file("sbt-plugin")).
     },
     publishMavenStyle := false,
     bintrayRepository := "sbt-plugins",
-    bintrayOrganization := None,
-    addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.24")
+    bintrayOrganization := Some("7thsense"),
+    addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.25")
   ).
   enablePlugins(commonPlugins: _*)
 
@@ -83,11 +86,11 @@ lazy val monixInterop = project.in(file("interop/monix")).
       "io.monix" %%% "monix" % "2.3.3"
     ),
     publishMavenStyle := true,
-    publishTo := {
-      val nexus = "https://oss.sonatype.org/"
-      if (isSnapshot.value) Some("snapshots" at nexus + "content/repositories/snapshots")
-      else                  Some("releases"  at nexus + "service/local/staging/deploy/maven2")
-    }
+//    publishTo := {
+//      val nexus = "https://oss.sonatype.org/"
+//      if (isSnapshot.value) Some("snapshots" at nexus + "content/repositories/snapshots")
+//      else                  Some("releases"  at nexus + "service/local/staging/deploy/maven2")
+//    }
   ).dependsOn(bindings)
    .enablePlugins(commonPlugins: _*)
    .enablePlugins(ScalaJSPlugin)
@@ -102,11 +105,11 @@ lazy val fs2Interop = project.in(file("interop/fs2")).
       "co.fs2" %%% "fs2-core" % "0.10.5"
     ),
     publishMavenStyle := true,
-    publishTo := {
-      val nexus = "https://oss.sonatype.org/"
-      if (isSnapshot.value) Some("snapshots" at nexus + "content/repositories/snapshots")
-      else                  Some("releases"  at nexus + "service/local/staging/deploy/maven2")
-    }
+//    publishTo := {
+//      val nexus = "https://oss.sonatype.org/"
+//      if (isSnapshot.value) Some("snapshots" at nexus + "content/repositories/snapshots")
+//      else                  Some("releases"  at nexus + "service/local/staging/deploy/maven2")
+//    }
   ).dependsOn(bindings)
   .enablePlugins(commonPlugins: _*)
   .enablePlugins(ScalaJSPlugin)
